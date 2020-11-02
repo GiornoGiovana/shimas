@@ -79,9 +79,10 @@ class ActivityDetail(APIView):
     def post(self, request):
         serializer = ActivitySerializer(data=request.data)
 
-        movieserialize = MovieSeriaizer(data=self.convertData(request.data), many=True)
-        if movieserialize.is_valid():
-            movieserialize.save()
+        if request.data["activity_name"] == "Ver peliculas/series":
+            movieserialize = MovieSeriaizer(data=self.convertData(request.data), many=True)
+            if movieserialize.is_valid():
+                movieserialize.save()
 
         if serializer.is_valid():
             serializer.save()
