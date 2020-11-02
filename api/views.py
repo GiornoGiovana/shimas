@@ -37,7 +37,10 @@ class UserLogin(APIView):
         my_user = self.get_user_email(request.data["email"])
         if my_user != "Not found":
             serializer = UserSerializer(my_user)
-            return Response(serializer.data)
+            if serializer.data["password"] == request.data["password"]:
+                return Response(serializer.data)
+            else:
+                return Response(Http404)
         return Response(Http404)
 
 class UserDetail(APIView):
