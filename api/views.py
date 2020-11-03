@@ -31,16 +31,16 @@ class UserLogin(APIView):
         try:
             return User.objects.get(email=email)
         except:
-            return "Not found"
+            raise Http404
 
     def post(self, request):
         my_user = self.get_user_email(request.data["email"])
-        if my_user != "Not found":
+        if my_user:
             serializer = UserSerializer(my_user)
             if serializer.data["password"] == request.data["password"]:
-                return Response(serializer.data)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                return Response(Http404)
+                raise Http404
         return Response(Http404)
 
 class UserDetail(APIView):
