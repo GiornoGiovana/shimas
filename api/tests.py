@@ -29,7 +29,6 @@ class RegistrationTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-
 class UserCountTest(APITestCase):
 
     def test_count(self):
@@ -42,31 +41,38 @@ class UserCountTest(APITestCase):
 
 class ProfileTestCase(APITestCase):
 
-    def test_profile(self):
+    def test_delete_profile(self):
         user = {"name": "user1", "email": "user1@email.com", "password": "test_password"}
         res = self.client.post("/users/", user)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED) 
-        request = self.client.get("/users/2/")
-        self.assertEqual(request.json()['name'], "user1")
+        request = self.client.delete("/users/1/")
+        self.assertEqual(request.status_code, status.HTTP_204_NO_CONTENT)
     
     def test_patch_profile(self):
-        user = {"name": "user1", "email": "user1@email.com", "password": "test_password"}
+        user = {"name": "user2", "email": "user2@email.com", "password": "test_password"}
         res = self.client.post("/users/", user)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED) 
         new_user = {"name": "newUser", "email": "newUser@email.com", "password": "new_password"}
-        response = self.client.patch("/users/1/", new_user)
+        response = self.client.patch("/users/2/", new_user)
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(response.json()['name'], "newUser")
+
+    def test_profile(self):
+        user = {"name": "user3", "email": "user3@email.com", "password": "test_password"}
+        res = self.client.post("/users/", user)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED) 
+        request = self.client.get("/users/3/")
+        self.assertEqual(request.json()['name'], "user3")
 
 class QuizTestCase(APITestCase):
 
     def test_quiz(self):
-        user = {"name": "testname1", "email": "test1@email.com",
-                "password": "test_password1"}
+        user = {"name": "testname4", "email": "test4@email.com",
+                "password": "test_password4"}
         res = self.client.post("/users/", user)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED) 
         data = {"activity_name": "Cocinar", "activity_type": "Tradicional",
-                "user": 3}
+                "user": 4}
         response =  self.client.post("/activity/", data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED) 
