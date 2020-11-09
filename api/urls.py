@@ -6,6 +6,7 @@ urlpatterns = [
     path('users/<int:pk>/', views.UserDetail.as_view()),
     path('activity/', views.ActivityDetail.as_view()),
     path('users/login/', views.UserLogin.as_view()),
+    path('recommendation/variety/<int:user_id>/', views.UserRecommendation.as_view()),
     path('recommendation/<int:user_id>/', views.RecommendationList.as_view()),
     path('recommendation/<int:pk>/<str:movie>/', views.RecommendationDetail.as_view()),
     path('recommendation/filter/<int:pk>/<int:runtime>/', views.RecommendationFilter.as_view()),

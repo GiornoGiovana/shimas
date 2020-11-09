@@ -17,3 +17,9 @@ class MovieRecomment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie = models.CharField(max_length=100)
     runtime = models.IntegerField()
+
+class User_Activity(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    activity = models.ForeignKey(Activity,on_delete=models.CASCADE)
+    rating = models.IntegerField()
+

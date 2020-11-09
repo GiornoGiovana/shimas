@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'shimas',
         'USER': 'root',
-        'PASSWORD': 'holymollybattlepass', # RECORDAR !!!!!!!!!!!!!!!!!!!!!!!!!!
+        'PASSWORD': 'root', # RECORDAR !!!!!!!!!!!!!!!!!!!!!!!!!!
         'HOST': 'localhost',
         'PORT': '3306'
     }

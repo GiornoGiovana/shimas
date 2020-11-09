@@ -13,7 +13,7 @@ def get_runtime_from_index(index):
     return df[df.index == index]["runtime"].values[0]
 #Step 1: Read CSV File
 
-engine = create_engine('mysql+pymysql://root:holymollybattlepass@localhost:3306/shimas')
+engine = create_engine('mysql+pymysql://root:root@localhost:3306/shimas')
 
 dbConnection = engine.connect()
 

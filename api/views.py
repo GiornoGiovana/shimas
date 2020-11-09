@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
-from .models import User, Activity, MovieRecomment
+from .models import *
 from .serializers import UserSerializer, ActivitySerializer, MovieSeriaizer
 
 from rest_framework import status
@@ -104,6 +104,7 @@ class RecommendationList(APIView):
 
     def get(self, request, user_id):
         recomendation = MovieRecomment.objects.filter(user=user_id)
+
         serializer = MovieSeriaizer(recomendation, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -124,7 +125,7 @@ class RecommendationDetail(APIView):
 class RecommendationFilter(APIView):
     def get_recomment(self,user_id , runtime):
         try:
-            return MovieRecomment.objects.filter(user=user_id, runtime=runtime)
+            return MovieRecomment.objects.filter(user=user_id, runtime__lt=runtime)
         except:
             raise Http404
 
@@ -134,6 +135,40 @@ class RecommendationFilter(APIView):
         if serializer.data:
             return Response(serializer.data)
         raise Http404
+
+class UserRecommendation(APIView):
+    def recommended(self,user_id):
+        recomendaciones = []
+        try:
+            #encontrando las actividades preferidas del usuario
+            user_actividades = User_Activity.objects.filter(user=user_id).order_by('rating')
+        except:
+            raise Http404
+        #obtenemos las top 3 actividades del usuario
+        user_actividades = user_actividades[0:3]
+        for act in user_actividades:
+            #Obtenemos realaciones usuario_actividad de otros usuarios que han tambien han dado calificacion alta a la actividad
+            other_users = User_Activity.objects.filter(activity=act.activity).exclude(user=act.user).order_by('rating')
+            usuario_aux = User.objets.filter(id=other_users.user)
+            #top actividades del usuario vecino que encontramos
+            u_a_aux = User_Activity.objects.filter(user=usuario_aux.id).order_by('rating')
+            u_a_aux = u_a_aux[0:2]
+            for a in u_a_aux:
+                recomendaciones.append(Activity.objects.filter(id=a.activity))
+
+        return recomendaciones
+
+    def get(self,request,user_id):
+        recomendaciones = self.recommended(user_id)
+        serializer = ActivitySerializer(recomendaciones,many=True)
+
+        if serializer.data:
+            return Response(serializer.data)
+        raise Http404
+
+
+
+
 
 class DiscoverRecommendation(APIView):
 
